@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/txvier/base/common"
+	"github.com/txvier/base/txtime"
 )
 
 // User
@@ -13,5 +13,5 @@ type User struct {
 	UId        string          `json:"uid"`
 	Name       string          `json:"name" binding:"required"`
 	Pwd        string          `json:"pwd" binding:"required"`
-	CreateTime common.JSONTime `json:"create_time"`
+	CreateTime txtime.JSONTime `json:"create_time"`
 }

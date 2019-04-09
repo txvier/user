@@ -1,13 +1,12 @@
 package api
 
 import (
-	"dpm/common"
-	"dpm/middleware"
+	"github.com/txvier/base/txlogger"
 )
 
 var (
-	Logger       = common.Logger
-	CURRENT_USER = middleware.CURRENT_USER
+	Logger       = txlogger.Logger
+	CURRENT_USER = "CURRENT_USER"
 )
 
 const (
@@ -22,9 +21,9 @@ type PageableRequest struct {
 	Page  int64 `query:"page" binding:"required,numeric"`
 }
 
-func check(err error)  {
+func check(err error) {
 	if err != nil {
-	panic(err)
+		panic(err)
 	}
 }
 
@@ -34,14 +33,13 @@ func CheckErr(rte func() error) {
 
 type FuncErr func() error
 
-type ErrIsNilExec struct{
+type ErrIsNilExec struct {
 	err error
 }
 
-func (eine *ErrIsNilExec) Exec(f FuncErr) *ErrIsNilExec{
+func (eine *ErrIsNilExec) Exec(f FuncErr) *ErrIsNilExec {
 	if eine.err == nil {
 		eine.err = f()
 	}
 	return eine
 }
-

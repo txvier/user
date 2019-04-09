@@ -2,10 +2,8 @@ package repositories
 
 import (
 	"github.com/txvier/base/common"
-	"github.com/txvier/base/errors"
 	"github.com/txvier/user/models"
-	"time"
-// "github.com/goinggo/mapstructure"
+	// "github.com/goinggo/mapstructure"
 )
 
 type UsersRepository struct{}
@@ -22,7 +20,7 @@ func NewUsersRepository() *UsersRepository {
 //返回用户信息
 func (this *UsersRepository) GetUserForAuth(u models.User) (udb models.User, err error) {
 
-	params := make(map[string]interface{})
+	/*params := make(map[string]interface{})
 	params["name"] = u.Name
 	params["pwd"] = u.Pwd
 
@@ -36,13 +34,14 @@ func (this *UsersRepository) GetUserForAuth(u models.User) (udb models.User, err
 		}
 	}
 
-	return udb, QueryNeo(callback, c)
+	return udb, QueryNeo(callback, c)*/
+	return
 }
 
 //用户是否存在
-func (this *UsersRepository) IsExist(u models.User) (bool, error) {
+func (this *UsersRepository) IsExist(u models.User) (b bool, err error) {
 
-	params := make(map[string]interface{})
+	/*params := make(map[string]interface{})
 	params["name"] = u.Name
 
 	c := NewCypher("users_repository.is_exist.cypher").Params(params)
@@ -55,7 +54,7 @@ func (this *UsersRepository) IsExist(u models.User) (bool, error) {
 
 	err := QueryNeo(callback, c)
 
-	if err := errors.ErrInternalServer(err); err != nil {
+	if err := txerror.ErrInternalServer(err); err != nil {
 		return false, err
 	}
 
@@ -63,20 +62,21 @@ func (this *UsersRepository) IsExist(u models.User) (bool, error) {
 		return false, nil
 	}
 
-	return true, nil
+	return true, nil*/
+	return
 }
 
 //新增用户
-func (this *UsersRepository) CreateUser(u models.User) error {
+func (this *UsersRepository) CreateUser(u models.User) (err error) {
 
-	isExist, err := this.IsExist(u)
+	/*isExist, err := this.IsExist(u)
 
-	if err := errors.ErrInternalServer(err); err != nil {
+	if err := txerror.ErrInternalServer(err); err != nil {
 		return err
 	}
 
 	if isExist {
-		return errors.ErrForbiddenf("user name [%s] is exist..", u.Name)
+		return txerror.ErrForbiddenf("user name [%s] is exist..", u.Name)
 	}
 
 	m := map[string]interface{}{
@@ -88,13 +88,14 @@ func (this *UsersRepository) CreateUser(u models.User) error {
 
 	c := NewCypher("users_repository.create_user.cypher").Params(m)
 
-	return ExecNeo(c)
+	return ExecNeo(c)*/
+	return
 }
 
 //返回所有用户
 func (this *UsersRepository) GetAllUsers(p common.Pageable) (_ common.Pageable, err error) {
 
-	c := NewCypher("users_repository.get_all_users.cypher_count")
+	/*c := NewCypher("users_repository.get_all_users.cypher_count")
 
 	var count int64
 
@@ -104,7 +105,7 @@ func (this *UsersRepository) GetAllUsers(p common.Pageable) (_ common.Pageable, 
 
 	err = QueryNeo(callback, c)
 
-	if err := common.ErrInternalServer(err); err != nil {
+	if err := txerror.ErrInternalServer(err); err != nil {
 		return p, err
 	}
 
@@ -130,5 +131,6 @@ func (this *UsersRepository) GetAllUsers(p common.Pageable) (_ common.Pageable, 
 		p.AddContent(m)
 	}
 
-	return p, QueryNeo(callback, c)
+	return p, QueryNeo(callback, c)*/
+	return
 }

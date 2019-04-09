@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	userRouter = http.ApiRouter{
+	userRouter = http.HttpRouter{
 		http.Route{
 			Name:        "cvs_create_cvm_bsinfo", //新增基本信息
 			Methods:     []string{"POST"},
@@ -18,7 +18,7 @@ var (
 
 type Student struct {
 	Name string
-	Age int
+	Age  int
 }
 
 var arr = []Student{
@@ -26,5 +26,4 @@ var arr = []Student{
 		"1",
 		100,
 	},
-
 }

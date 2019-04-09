@@ -2,9 +2,9 @@ package api
 
 import (
 	"github.com/txvier/base/common"
-	"github.com/txvier/base/errors"
 	"github.com/txvier/base/http"
-	"dpm/middleware"
+	"github.com/txvier/base/txerror"
+	"github.com/txvier/base/txjwt"
 	"github.com/txvier/user/models"
 	"github.com/txvier/user/repositories"
 )
@@ -17,24 +17,24 @@ var (
 func Loggin(req *http.ApiRequest) (rsp http.ApiResponse) {
 	var u models.User
 	if err := req.BindJSON(&u); err != nil {
-		return rsp.BindError(error.ErrTrace(err))
+		return rsp.BindError(txerror.ErrTrace(err))
 	}
 	if udb, err := usersRepository.GetUserForAuth(u); err != nil {
-		return rsp.BindError(error.ErrTrace(err))
+		return rsp.BindError(txerror.ErrTrace(err))
 	} else {
 		if udb.UId == "" {
-			return rsp.BindError(error.ErrForbidden("user name or pwd err."))
+			return rsp.BindError(txerror.ErrForbidden("user name or pwd err."))
 		}
 
-		ut := &middleware.UserToken{
+		ut := &txjwt.UserToken{
 			Name: udb.Name,
 			Pwd:  udb.Pwd,
 			Id:   udb.UId,
 		}
-		if token, err := middleware.CreateToken(ut); err != nil {
-			return rsp.BindError(error.ErrTrace(err))
+		if token, err := txjwt.CreateToken(ut); err != nil {
+			return rsp.BindError(txerror.ErrTrace(err))
 		} else {
-			return rsp.AddAttribute(middleware.TOKEN_KEY, token).AddAttribute("auth_user", udb)
+			return rsp.AddAttribute(txjwt.TOKEN_KEY, token).AddAttribute("auth_user", udb)
 		}
 	}
 }
@@ -43,10 +43,10 @@ func Loggin(req *http.ApiRequest) (rsp http.ApiResponse) {
 func CreateUser(req *http.ApiRequest) (rsp http.ApiResponse) {
 	var u models.User
 	if err := req.BindJSON(&u); err != nil {
-		return rsp.BindError(error.ErrTrace(err))
+		return rsp.BindError(txerror.ErrTrace(err))
 	}
 	if err := usersRepository.CreateUser(u); err != nil {
-		return rsp.BindError(error.ErrTrace(err))
+		return rsp.BindError(txerror.ErrTrace(err))
 	}
 	return
 }
@@ -62,11 +62,11 @@ func RegisterUser(req *http.ApiRequest) (rsp http.ApiResponse) {
 func GetAllUsers(req *http.ApiRequest) (rsp http.ApiResponse) {
 	var pr PageableRequest
 	if err := req.BindStruct(&pr); err != nil {
-		return rsp.BindError(error.ErrTrace(err))
+		return rsp.BindError(txerror.ErrTrace(err))
 	}
 	p, err := common.NewPageable(pr.Limit, pr.Page)
 	if err != nil {
-		return rsp.BindError(error.ErrTrace(err))
+		return rsp.BindError(txerror.ErrTrace(err))
 	}
 	p, err = usersRepository.GetAllUsers(p)
 	return rsp.BindError(err).AddObject(p)
